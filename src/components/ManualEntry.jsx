@@ -51,7 +51,14 @@ function ManualEntry({ onPredict, loading }) {
           className="submit-btn"
           disabled={loading || !textInput.trim()}
         >
-          {loading ? 'Processing...' : 'Classify Exoplanets'}
+          {loading ? (
+            <>
+              <span className="spinner"></span>
+              <span>Analyzing Light Curves...</span>
+            </>
+          ) : (
+            'Classify Exoplanets'
+          )}
         </button>
       </form>
     </div>

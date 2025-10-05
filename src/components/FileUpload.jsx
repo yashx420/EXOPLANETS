@@ -98,7 +98,14 @@ function FileUpload({ onPredict, loading }) {
           className="submit-btn"
           disabled={loading || !file}
         >
-          {loading ? 'Processing...' : 'Classify Exoplanets'}
+          {loading ? (
+            <>
+              <span className="spinner"></span>
+              <span>Analyzing Light Curves...</span>
+            </>
+          ) : (
+            'Classify Exoplanets'
+          )}
         </button>
       </form>
     </div>

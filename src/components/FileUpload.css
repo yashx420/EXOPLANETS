@@ -83,3 +83,72 @@
   cursor: not-allowed;
   transform: none;
 }
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.drop-zone {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.drop-zone::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, transparent, rgba(220, 38, 38, 0.3), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: borderSweep 3s linear infinite;
+  pointer-events: none;
+}
+
+.drop-zone:hover::before,
+.drop-zone.active::before {
+  opacity: 1;
+}
+
+@keyframes borderSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.upload-icon {
+  transition: transform 0.3s ease;
+}
+
+.drop-zone:hover .upload-icon {
+  transform: translateY(-5px);
+}
+
+.file-label {
+  position: relative;
+  z-index: 1;
+}
