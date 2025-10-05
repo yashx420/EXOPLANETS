@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const { spawn } = require('child_process');
+const path = require('path');
 
 const app = express();
 const PORT = 3001;
@@ -17,54 +19,57 @@ app.post('/api/predict', async (req, res) => {
       });
     }
 
-    const predictions = data.map((fluxValues, index) => {
-      if (!Array.isArray(fluxValues) || fluxValues.length === 0) {
-        return {
-          isExoplanet: false,
-          confidence: 0.0
-        };
-      }
+    const pythonScript = path.join(__dirname, 'predict_service.py');
+    const inputData = JSON.stringify(data);
 
-      const mean = fluxValues.reduce((a, b) => a + b, 0) / fluxValues.length;
-      const variance = fluxValues.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / fluxValues.length;
-      const stdDev = Math.sqrt(variance);
+    const pythonProcess = spawn('python3', [pythonScript, inputData]);
 
-      const minVal = Math.min(...fluxValues);
-      const maxVal = Math.max(...fluxValues);
-      const range = maxVal - minVal;
+    let outputData = '';
+    let errorData = '';
 
-      const dips = fluxValues.filter((val, i) => {
-        if (i === 0 || i === fluxValues.length - 1) return false;
-        return val < fluxValues[i - 1] && val < fluxValues[i + 1] && (mean - val) > stdDev * 0.5;
-      }).length;
-
-      let score = 0;
-
-      if (stdDev > 0.01) score += 0.2;
-      if (range > 0.05) score += 0.2;
-      if (dips >= 3) score += 0.3;
-      if (variance > 0.001) score += 0.15;
-
-      const negativeFluxCount = fluxValues.filter(v => v < mean - stdDev).length;
-      if (negativeFluxCount > fluxValues.length * 0.05) {
-        score += 0.15;
-      }
-
-      const confidence = Math.min(Math.max(score + (Math.random() * 0.1 - 0.05), 0), 1);
-      const isExoplanet = confidence > 0.5;
-
-      return {
-        isExoplanet,
-        confidence: parseFloat(confidence.toFixed(4))
-      };
+    pythonProcess.stdout.on('data', (data) => {
+      outputData += data.toString();
     });
 
-    res.json({ predictions });
+    pythonProcess.stderr.on('data', (data) => {
+      errorData += data.toString();
+    });
+
+    pythonProcess.on('close', (code) => {
+      if (code !== 0) {
+        console.error('Python process error:', errorData);
+        return res.status(500).json({
+          error: 'Model prediction failed',
+          details: errorData || 'Python process exited with non-zero code',
+          useFallback: true
+        });
+      }
+
+      try {
+        const result = JSON.parse(outputData);
+        if (result.error) {
+          return res.status(500).json({
+            error: result.error,
+            useFallback: true
+          });
+        }
+        res.json(result);
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        res.status(500).json({
+          error: 'Failed to parse model output',
+          details: parseError.message,
+          useFallback: true
+        });
+      }
+    });
+
   } catch (error) {
     console.error('Prediction error:', error);
     res.status(500).json({
       error: 'Prediction failed',
-      details: error.message
+      details: error.message,
+      useFallback: true
     });
   }
 });
@@ -75,9 +80,8 @@ app.get('/api/health', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Prediction API server running on http://localhost:${PORT}`);
-  console.log(`\nNOTE: This is a simplified prediction service for demonstration.`);
-  console.log(`To use the actual trained model (exoplanet_model.h5), you would need:`);
-  console.log(`  1. Python environment with TensorFlow, NumPy, SciPy, and scikit-learn`);
-  console.log(`  2. The preprocessing pipeline from project_main.py`);
-  console.log(`  3. Integration with the Keras model file\n`);
+  console.log(`Using TensorFlow model: exoplanet_model.h5`);
+  console.log(`\nRequirements:`);
+  console.log(`  - Python 3.x with TensorFlow, NumPy, SciPy, scikit-learn installed`);
+  console.log(`  - exoplanet_model.h5 file in project root\n`);
 });

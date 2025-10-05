@@ -1,32 +1,37 @@
 .results-section {
-  background: #1e293b;
-  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(10, 14, 39, 0.9) 100%);
+  border-radius: 8px;
   padding: 32px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(220, 38, 38, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.1);
 }
 
 .results-title {
   font-size: 24px;
   font-weight: 700;
-  color: #f1f5f9;
+  color: #ffffff;
   margin-bottom: 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
 }
 
 .table-container {
   overflow-x: auto;
   margin-bottom: 32px;
   border-radius: 8px;
-  border: 1px solid #334155;
+  border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 .results-table {
   width: 100%;
   border-collapse: collapse;
-  background: #0f172a;
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .results-table thead {
-  background: #1e293b;
+  background: rgba(220, 38, 38, 0.1);
+  border-bottom: 2px solid rgba(220, 38, 38, 0.3);
 }
 
 .results-table th {
@@ -34,33 +39,32 @@
   text-align: left;
   font-size: 14px;
   font-weight: 600;
-  color: #94a3b8;
+  color: #cbd5e1;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 2px solid #334155;
+  letter-spacing: 0.1em;
 }
 
 .results-table td {
   padding: 16px;
   font-size: 15px;
   color: #cbd5e1;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid rgba(220, 38, 38, 0.1);
 }
 
 .results-table tbody tr {
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .results-table tbody tr:hover {
-  background: #1e293b;
+  background: rgba(220, 38, 38, 0.05);
 }
 
 .exoplanet-row {
-  background: rgba(34, 197, 94, 0.05);
+  background: rgba(220, 38, 38, 0.1);
 }
 
 .exoplanet-row:hover {
-  background: rgba(34, 197, 94, 0.1);
+  background: rgba(220, 38, 38, 0.15);
 }
 
 .classification-badge {
@@ -74,9 +78,10 @@
 }
 
 .classification-badge.positive {
-  background: rgba(34, 197, 94, 0.2);
-  color: #4ade80;
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  background: rgba(220, 38, 38, 0.2);
+  color: #ef4444;
+  border: 1px solid rgba(220, 38, 38, 0.4);
+  text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
 }
 
 .classification-badge.negative {
@@ -97,7 +102,7 @@
 }
 
 .icon.success {
-  color: #22c55e;
+  color: #dc2626;
 }
 
 .icon.neutral {
@@ -111,8 +116,8 @@
 }
 
 .summary-card {
-  background: #0f172a;
-  border: 1px solid #334155;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(220, 38, 38, 0.2);
   border-radius: 8px;
   padding: 24px;
   transition: all 0.3s ease;
@@ -120,12 +125,13 @@
 
 .summary-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px -2px rgba(220, 38, 38, 0.3);
+  border-color: rgba(220, 38, 38, 0.4);
 }
 
 .summary-card.success {
-  border-color: rgba(34, 197, 94, 0.3);
-  background: rgba(34, 197, 94, 0.05);
+  border-color: rgba(220, 38, 38, 0.4);
+  background: rgba(220, 38, 38, 0.1);
 }
 
 .summary-card.neutral {
@@ -149,7 +155,8 @@
 }
 
 .summary-card.success .summary-value {
-  color: #4ade80;
+  color: #ef4444;
+  text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
 }
 
 .summary-card.neutral .summary-value {
